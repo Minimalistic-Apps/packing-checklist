@@ -15,3 +15,4 @@ Only features that are aligned with the purpose of the app will be considered.
 - [ ] Create items
 - [ ] Create lists and add item to those lists. 
 - [ ] **One item can be in multiple lists.** This enables for extensions of your packing checklist for winter or other specialities when you need extra items.
+- [ ] Export data (for backup)
