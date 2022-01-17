@@ -1,7 +1,6 @@
-package com.minimalisticapps.packingchecklist
+package com.minimalisticapps.packingchecklist.state
 
 import java.util.*
-import kotlin.collections.HashMap
 
 data class Item(
     val id: UUID = UUID.randomUUID(),
@@ -19,13 +18,13 @@ data class Event(
     val id: UUID = UUID.randomUUID(),
     val name: String = "",
     val checklistId: UUID,
-    val itemsCheckedStatus: HashMap<UUID, Boolean>,
+    val itemsCheckedStatus: Map<UUID, Boolean> = hashMapOf(),
 )
 
 class State(
-    items: HashMap<UUID, Item>,
-    checklists: HashMap<UUID, Checklist>,
-    itemHasChecklist: HashMap<UUID, UUID>,
-    events: HashMap<UUID, Event>
+    items: Map<UUID, Item> = hashMapOf(),
+    checklists: Map<UUID, Checklist> = hashMapOf(),
+    itemHasChecklist: Map<UUID, UUID> = hashMapOf(),
+    events: Map<UUID, Event> = hashMapOf(),
 ) {
 }
