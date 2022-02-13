@@ -6,7 +6,7 @@
 
 ## Feature requests
 
-This is minimalistic app that has one sole purpose. **It manages the lists of items for your travel packing.**
+This is minimalistic app that has one sole purpose. **It manages the lists of items for your travel packing and allowes you to check items as you pack them.**
 
 Only features that are aligned with the purpose of the app will be considered.
 
