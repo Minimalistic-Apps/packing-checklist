@@ -19,3 +19,5 @@ Only features that are aligned with the purpose of the app will be considered.
   - When you add `Item` to the `List` (or you remove it from the list) it is automaticlly added to/removed from all non-finished `Checklists` but it stays in finished once.
 - [ ] **One item can be in multiple lists.** This enables for extensions of your packing checklist for winter or other specialities when you need extra items.
 - [ ] Export data (for backup) as JSON file
+
+![](/doc/diagram.svg)
