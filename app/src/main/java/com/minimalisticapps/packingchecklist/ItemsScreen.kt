@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.minimalisticapps.packingchecklist.state.item.Item
 import com.minimalisticapps.packingchecklist.ui.EnhancedInputText
 
 @Composable
