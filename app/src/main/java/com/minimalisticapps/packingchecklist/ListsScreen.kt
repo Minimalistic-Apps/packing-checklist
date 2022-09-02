@@ -7,11 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 
 @Composable
-fun ItemsScreen() {
+fun ListsScreen() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "ItemsScreen")
+        Text(text = "ListsScreen")
     }
 }

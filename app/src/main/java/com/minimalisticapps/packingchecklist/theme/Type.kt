@@ -1,4 +1,4 @@
-package com.minimalisticapps.packingchecklist.ui.theme
+package com.minimalisticapps.packingchecklist.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
