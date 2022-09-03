@@ -1,18 +1,19 @@
 package com.minimalisticapps.packingchecklist
 
 import androidx.room.*
+import java.util.*
 
 @Entity
 data class Item(
     @PrimaryKey(autoGenerate = false)
-    var itemId: Long,
+    var itemId: UUID,
     var name: String,
 )
 
 @Entity
 data class ItemList(
     @PrimaryKey(autoGenerate = false)
-    var listId: Long,
+    var listId: UUID,
     var order: Long,
     var name: String,
 )
@@ -46,7 +47,7 @@ data class ItemWithLists(
 
 @Entity
 data class Checklist(
-    @PrimaryKey(autoGenerate = false) var checklistId: Long,
+    @PrimaryKey(autoGenerate = false) var checklistId: UUID,
     var name: String,
     var order: Long,
     var isFinished: Boolean,

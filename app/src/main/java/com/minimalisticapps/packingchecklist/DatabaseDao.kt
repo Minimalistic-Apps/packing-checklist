@@ -1,15 +1,22 @@
 package com.minimalisticapps.packingchecklist
 
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DatabaseDao {
     @Transaction
     @Query("SELECT * FROM ItemList")
-    fun getListsWithItems(): List<ListWithItems>
+    fun getListsWithItems(): Flow<List<ListWithItems>>
 
     @Transaction
     @Query("SELECT * FROM Item")
-    fun getItemWithLists(): List<ItemWithLists>
+    fun getItemWithLists(): Flow<List<ItemWithLists>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertItem(item: Item)
+
+    @Update
+    suspend fun updateItem(item: Item)
 
 }

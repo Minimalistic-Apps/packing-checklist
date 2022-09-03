@@ -9,6 +9,7 @@
             android:label="@string/app_name"
             android:roundIcon="@drawable/ic_icon"
             android:supportsRtl="true"
+            android:name="com.minimalisticapps.packingchecklist.MyApplication"
             android:theme="@style/Theme.PackingChecklist"
             tools:targetApi="31">
         <activity
