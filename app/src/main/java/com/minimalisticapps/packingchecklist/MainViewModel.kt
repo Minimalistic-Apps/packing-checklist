@@ -23,4 +23,10 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
         }
     }
 
+    fun deleteItem(item: Item) {
+        viewModelScope.launch {
+            dao.deleteItem(item)
+        }
+    }
+
 }

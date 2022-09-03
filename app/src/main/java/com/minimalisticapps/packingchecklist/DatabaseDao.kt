@@ -19,4 +19,7 @@ interface DatabaseDao {
     @Update
     suspend fun updateItem(item: Item)
 
+    @Delete
+    suspend fun deleteItem(item: Item)
+
 }
