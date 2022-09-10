@@ -1,27 +1,22 @@
 package com.minimalisticapps.packingchecklist.item
 
-import android.util.Log
-import android.view.KeyEvent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.minimalisticapps.packingchecklist.CustomTextField
 import com.minimalisticapps.packingchecklist.ItemWithLists
 import com.minimalisticapps.packingchecklist.MainViewModel
 import kotlinx.coroutines.delay
@@ -41,23 +36,14 @@ fun ItemRow(itemWithLists: ItemWithLists) {
             )
         )
     }
-    var isEditable by remember { mutableStateOf(false) }
-    var isFocused by remember { mutableStateOf(false) }
-
-    // This is restarted with every recompose, recompose is run with every text change
-    LaunchedEffect(key1 = inputText, block = {
-        if (inputText.text.isBlank()) return@LaunchedEffect
-        delay(200)
-        viewModel.renameItem(itemWithLists.item, inputText.text)
-    })
-
+    val isEditable = viewModel.itemIdToEdit.value == itemWithLists.item.itemId
     val rowModifier = Modifier.fillMaxWidth()
 
     Row(
         modifier = (
                 if (!isEditable)
                     rowModifier.clickable(onClick = {
-                        isEditable = true
+                        viewModel.itemRowClicked(itemWithLists.item.itemId)
 
                         // Set cursor to end
                         val end = inputText.text.length
@@ -75,33 +61,28 @@ fun ItemRow(itemWithLists: ItemWithLists) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (isEditable) {
+            // This is restarted with every recompose, recompose is run with every text change
+            LaunchedEffect(key1 = inputText, block = {
+                if (inputText.text.isBlank()) return@LaunchedEffect
+                delay(200)
+                viewModel.renameItem(itemWithLists.item, inputText.text)
+            })
+
             DisposableEffect(Unit) {
                 focusRequester.requestFocus()
                 onDispose { }
             }
 
-            TextField(
+            CustomTextField(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .focusRequester(focusRequester)
-                    .onFocusChanged {
-                        if (it.isFocused) {
-                            isFocused = true
-                        }
-
-                        if (isFocused && !it.isFocused) {
-                            isEditable = false
-                            isFocused = false
-                        }
-                    },
+                    .fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
-                    isEditable = false
-                    isFocused = false
+                    viewModel.itemRowDone(itemWithLists.item.itemId)
                 }),
                 value = inputText,
                 onValueChange = { inputText = it },
-                singleLine = true,
             )
         } else {
             Text(
@@ -111,7 +92,7 @@ fun ItemRow(itemWithLists: ItemWithLists) {
                 modifier = Modifier
                     .weight(8f)
                     .fillMaxWidth()
-                    .padding(start = 15.dp, end = 15.dp)
+                    .padding(start = 6.dp, end = 6.dp)
             )
         }
     }

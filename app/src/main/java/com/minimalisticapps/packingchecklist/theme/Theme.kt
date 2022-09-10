@@ -12,7 +12,7 @@ private val LightColorPalette = darkColors(
     secondary = SecondaryColorForLight,
     secondaryVariant = SecondaryColorForLight,
     background = BackgroundColorForLight,
-    surface = SurfaceColorForLight,
+    surface = SurfaceColorForDark,
     error = ErrorColor,
     onPrimary = WhiteColor,
     onSecondary = WhiteColor,
@@ -23,7 +23,7 @@ private val LightColorPalette = darkColors(
 
 private val DarkColorPalette = lightColors(
     background = BackgroundColorForDark,
-    surface = SurfaceColorForDark,
+    surface = SurfaceColorForLight,
     primary = PrimaryColor,
     secondary = SecondaryColorForDark,
     onBackground = OnBackgroundColor,

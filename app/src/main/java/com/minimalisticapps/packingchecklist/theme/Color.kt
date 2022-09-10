@@ -4,8 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 val BackgroundColorForLight = Color(0xFFFFFFFF)
 val BackgroundColorForDark = Color(0xFF1e1e1e)
-val SurfaceColorForLight = Color(0xFFFFFFFF)
-val SurfaceColorForDark = Color(0xEE000000)
+val SurfaceColorForDark = Color(0xFFFFFFFF)
+val SurfaceColorForLight = Color(0xEE000000)
 val SecondaryColorForLight = Color(0xFF3d8c31)
 val SecondaryColorForDark = Color(0xFF50a03b)
 val BlackColor = Color(0xFF000000)
