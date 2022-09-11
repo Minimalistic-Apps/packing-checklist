@@ -22,4 +22,13 @@ interface DatabaseDao {
     @Delete
     suspend fun deleteItem(item: Item)
 
+    @Update
+    suspend fun updateList(list: ItemList)
+
+    @Delete
+    suspend fun deleteList(list: ItemList)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertList(itemList: ItemList)
+
 }

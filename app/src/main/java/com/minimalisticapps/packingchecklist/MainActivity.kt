@@ -57,7 +57,14 @@ class MainActivity : ComponentActivity() {
                                     Text(text = "Add", color = Color.White)
                                 },
                                 onClick = {
-                                    viewModel.addItem()
+                                    val currentRoute =
+                                        navController.currentBackStackEntry?.destination?.route
+
+                                    if (currentRoute == Screen.Items.route) {
+                                        viewModel.addItem()
+                                    } else if (currentRoute == Screen.Lists.route) {
+                                        viewModel.addList()
+                                    }
                                 }
                             )
                         },

@@ -50,7 +50,7 @@ fun <T : HasKey> UiList(
                 val dismissState = rememberDismissState()
 
                 if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                   onDelete(it)
+                    onDelete(it)
                 }
 
                 val isDark = isSystemInDarkTheme()
@@ -66,16 +66,8 @@ fun <T : HasKey> UiList(
                             ).value,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(54.dp)
-                                .align(alignment = Alignment.CenterVertically)
-                                .drawBehind {
-                                    drawLine(
-                                        color = if (isDark) Color.Gray else Color.LightGray,
-                                        Offset(0f, 0f),
-                                        Offset(size.width, 0f),
-                                        strokeWidth = Stroke.DefaultMiter
-                                    )
-                                },
+                                .height(50.dp)
+                                .align(alignment = Alignment.CenterVertically),
                             backgroundColor = if (isDark) BackgroundColorForDark else BackgroundColorForLight,
                         ) {
                             content(it)
@@ -110,6 +102,8 @@ fun <T : HasKey> UiList(
                         }
                     }
                 )
+
+                Divider(color = MaterialTheme.colors.onSurface.copy(alpha = 0.2f))
             }
         }
     }
