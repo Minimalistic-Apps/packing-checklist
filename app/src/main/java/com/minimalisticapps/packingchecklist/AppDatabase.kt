@@ -20,7 +20,7 @@ object UUIDConverter {
 
 @Database(
     entities = [Item::class, ItemList::class, Checklist::class, ListHasItem::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(UUIDConverter::class)

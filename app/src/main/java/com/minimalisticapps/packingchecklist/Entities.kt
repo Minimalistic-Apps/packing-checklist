@@ -12,6 +12,7 @@ data class Item(
     @PrimaryKey(autoGenerate = false)
     var itemId: UUID,
     var name: String,
+    var order: Long,
 ) : HasKey {
     override val key: String get() = itemId.toString()
 }
@@ -20,8 +21,8 @@ data class Item(
 data class ItemList(
     @PrimaryKey(autoGenerate = false)
     var listId: UUID,
-    var order: Long,
     var name: String,
+    var order: Long,
 ) : HasKey {
     override val key: String get() = listId.toString()
 }

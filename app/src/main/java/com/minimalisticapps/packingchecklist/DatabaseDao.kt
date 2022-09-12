@@ -2,15 +2,16 @@ package com.minimalisticapps.packingchecklist
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 
 @Dao
 interface DatabaseDao {
     @Transaction
-    @Query("SELECT * FROM ItemList")
+    @Query("SELECT * FROM ItemList ORDER BY `ItemList`.`order`")
     fun getListsWithItems(): Flow<List<ListWithItems>>
 
     @Transaction
-    @Query("SELECT * FROM Item")
+    @Query("SELECT * FROM Item ORDER BY `Item`.`order`")
     fun getItemWithLists(): Flow<List<ItemWithLists>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -30,5 +31,15 @@ interface DatabaseDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertList(itemList: ItemList)
+
+    @Transaction
+    suspend fun updateMultipleItems(items: List<Item>) {
+        items.forEach { updateItem(it) }
+    }
+
+    @Transaction
+    suspend fun updateMultipleLists(lists: List<ItemList>) {
+        lists.forEach { updateList(it) }
+    }
 
 }

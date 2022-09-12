@@ -13,7 +13,7 @@ fun ListRow(listWithItems: ListWithItems) {
 
     ClickToEditText(
         text = listWithItems.list.name,
-        isEditable = viewModel.itemIdToEdit.value == listWithItems.list.listId,
+        isEditable = viewModel.itemListIdToEdit.value == listWithItems.list.listId,
         clicked = { viewModel.listRowClicked(listWithItems.list.listId) },
         onChange = { viewModel.renameList(listWithItems.list, it) },
         onEditDone = { viewModel.listRowDone(listWithItems.list.listId) }

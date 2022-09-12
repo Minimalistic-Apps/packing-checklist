@@ -15,11 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.minimalisticapps.packingchecklist.theme.BackgroundColorForDark
@@ -32,7 +29,9 @@ import com.minimalisticapps.packingchecklist.theme.Shapes
 fun <T : HasKey> UiList(
     displayItems: List<T>,
     onDelete: (item: T) -> Unit,
-    content: @Composable (item: T) -> Unit
+    content: @Composable (item: T) -> Unit,
+    onMove: (fromIndex: Int, toIndex: Int) -> Unit,
+    height: Dp,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,7 +65,7 @@ fun <T : HasKey> UiList(
                             ).value,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(50.dp)
+                                .height(height)
                                 .align(alignment = Alignment.CenterVertically),
                             backgroundColor = if (isDark) BackgroundColorForDark else BackgroundColorForLight,
                         ) {

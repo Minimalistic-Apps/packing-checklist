@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import java.lang.System.currentTimeMillis
 import java.util.*
 
 class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
@@ -21,7 +22,11 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
 
     fun addItem() {
         viewModelScope.launch {
-            val item = Item(itemId = UUID.randomUUID(), name = "")
+            val item = Item(
+                itemId = UUID.randomUUID(),
+                name = "",
+                order = currentTimeMillis(),
+            )
             dao.insertItem(item)
             _itemIdToEdit.value = item.itemId
         }
@@ -65,7 +70,11 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
 
     fun addList() {
         viewModelScope.launch {
-            val itemList = ItemList(listId = UUID.randomUUID(), name = "", order = 0)
+            val itemList = ItemList(
+                listId = UUID.randomUUID(),
+                name = "",
+                order = currentTimeMillis(),
+            )
             dao.insertList(itemList)
             _itemListIdToEdit.value = itemList.listId
         }
@@ -77,6 +86,26 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
 
     fun listRowDone(listId: UUID) {
         _itemListIdToEdit.value = null
+    }
+
+    fun reorderItems(from: Item, to: Item) {
+        viewModelScope.launch {
+            val originalTo = to.order
+            to.order = from.order
+            from.order = originalTo
+
+            dao.updateMultipleItems(listOf(from, to))
+        }
+    }
+
+    fun reorderLists(from: ItemList, to: ItemList) {
+        viewModelScope.launch {
+            val originalTo = to.order
+            to.order = from.order
+            from.order = originalTo
+
+            dao.updateMultipleLists(listOf(from, to))
+        }
     }
 
 }
