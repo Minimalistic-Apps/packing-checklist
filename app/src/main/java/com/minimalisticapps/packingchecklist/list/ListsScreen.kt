@@ -10,15 +10,15 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun ListsScreen() {
     val viewModel = getViewModel<MainViewModel>()
-    val items = viewModel.getAllLists().observeAsState()
+    val itemLists = viewModel.getAllLists().observeAsState()
 
     UiList(
-        displayItems = items.value ?: listOf(),
+        displayItems = itemLists.value ?: listOf(),
         onDelete = { viewModel.deleteList(it.list) },
         content = { ListRow(it) },
         onMove = { fromIndex, toIndex ->
-            val from = items.value?.get(fromIndex)
-            val to = items.value?.get(toIndex)
+            val from = itemLists.value?.get(fromIndex)
+            val to = itemLists.value?.get(toIndex)
 
             if (from != null && to != null) {
                 viewModel.reorderLists(from.list, to.list)

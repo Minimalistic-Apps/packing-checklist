@@ -4,9 +4,8 @@ sealed class Screen(val route: String) {
     object Checklists : Screen("Checklists")
 
     object Items : Screen("Items")
-    object AddItem : Screen("AddItem")
+    object AssignItemToList : Screen("AssignItemToList")
 
     object Lists : Screen("Lists")
-    object AddList : Screen("AddList")
 
 }

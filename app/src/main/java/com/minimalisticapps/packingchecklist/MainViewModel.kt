@@ -18,6 +18,9 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
     private val _itemListIdToEdit = mutableStateOf<UUID?>(null)
     val itemListIdToEdit: State<UUID?> = _itemListIdToEdit
 
+    private val _itemToChangeLists = mutableStateOf<ItemWithLists?>(null)
+    val itemToChangeLists: State<ItemWithLists?> = _itemToChangeLists
+
     fun getAllItems(): LiveData<List<ItemWithLists>> = dao.getItemWithLists().asLiveData()
 
     fun addItem() {
@@ -106,6 +109,10 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
 
             dao.updateMultipleLists(listOf(from, to))
         }
+    }
+
+    fun clickModifyLists(itemWithLists: ItemWithLists) {
+        _itemToChangeLists.value = itemWithLists
     }
 
 }

@@ -17,11 +17,12 @@ import com.minimalisticapps.packingchecklist.theme.PrimaryVariantColor
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
 
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
     BottomNavigation(
         backgroundColor = PrimaryVariantColor
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
 
         BottomNavigationItem(
             selected = currentRoute == Screen.Checklists.route,

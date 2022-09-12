@@ -28,11 +28,13 @@ import com.minimalisticapps.packingchecklist.theme.Shapes
 @Composable
 fun <T : HasKey> UiList(
     displayItems: List<T>,
-    onDelete: (item: T) -> Unit,
+    onDelete: ((item: T) -> Unit)?,
     content: @Composable (item: T) -> Unit,
-    onMove: (fromIndex: Int, toIndex: Int) -> Unit,
+    onMove: ((fromIndex: Int, toIndex: Int) -> Unit)?,
     height: Dp,
 ) {
+    val isDark = isSystemInDarkTheme()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -46,23 +48,67 @@ fun <T : HasKey> UiList(
                 items = displayItems,
                 key = { it.key }
             ) {
-                val dismissState = rememberDismissState()
+                if (onDelete !== null) {
+                    val dismissState = rememberDismissState()
 
-                if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                    onDelete(it)
-                }
+                    if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+                        onDelete(it)
+                    }
 
-                val isDark = isSystemInDarkTheme()
+                    SwipeToDismiss(
+                        state = dismissState,
+                        directions = setOf(DismissDirection.EndToStart),
+                        dismissContent = {
+                            Card(
+                                shape = Shapes.large,
+                                elevation = animateDpAsState(
+                                    if (dismissState.dismissDirection != null) 8.dp else 0.dp
+                                ).value,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(height)
+                                    .align(alignment = Alignment.CenterVertically),
+                                backgroundColor = if (isDark) BackgroundColorForDark else BackgroundColorForLight,
+                            ) {
+                                content(it)
+                            }
+                        },
+                        background = {
+                            val color by animateColorAsState(
+                                when (dismissState.targetValue) {
+                                    DismissValue.Default -> PrimaryColorLight
+                                    else -> Color.Red
+                                }
+                            )
+                            val alignment = Alignment.CenterEnd
+                            val icon = Icons.Default.Delete
 
-                SwipeToDismiss(
-                    state = dismissState,
-                    directions = setOf(DismissDirection.EndToStart),
-                    dismissContent = {
+                            val scale by animateFloatAsState(
+                                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+                            )
+
+                            Box(
+                                Modifier
+                                    .fillMaxSize()
+                                    .background(color)
+                                    .padding(horizontal = Dp(20f)),
+                                contentAlignment = alignment
+                            ) {
+                                Icon(
+                                    icon,
+                                    contentDescription = "Delete Icon",
+                                    modifier = Modifier.scale(scale)
+                                )
+                            }
+                        }
+                    )
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
                         Card(
                             shape = Shapes.large,
-                            elevation = animateDpAsState(
-                                if (dismissState.dismissDirection != null) 8.dp else 0.dp
-                            ).value,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(height)
@@ -71,36 +117,8 @@ fun <T : HasKey> UiList(
                         ) {
                             content(it)
                         }
-                    },
-                    background = {
-                        val color by animateColorAsState(
-                            when (dismissState.targetValue) {
-                                DismissValue.Default -> PrimaryColorLight
-                                else -> Color.Red
-                            }
-                        )
-                        val alignment = Alignment.CenterEnd
-                        val icon = Icons.Default.Delete
-
-                        val scale by animateFloatAsState(
-                            if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
-                        )
-
-                        Box(
-                            Modifier
-                                .fillMaxSize()
-                                .background(color)
-                                .padding(horizontal = Dp(20f)),
-                            contentAlignment = alignment
-                        ) {
-                            Icon(
-                                icon,
-                                contentDescription = "Delete Icon",
-                                modifier = Modifier.scale(scale)
-                            )
-                        }
                     }
-                )
+                }
 
                 Divider(color = MaterialTheme.colors.onSurface.copy(alpha = 0.2f))
             }
