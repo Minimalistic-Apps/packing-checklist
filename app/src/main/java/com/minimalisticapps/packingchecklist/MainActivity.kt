@@ -2,31 +2,32 @@ package com.minimalisticapps.packingchecklist
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import com.minimalisticapps.packingchecklist.theme.AppTheme
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.minimalisticapps.packingchecklist.checklist.ChecklistsScreen
-import com.minimalisticapps.packingchecklist.item.AssignItemToListScreen
+import com.minimalisticapps.packingchecklist.item.EditItemScreen
 import com.minimalisticapps.packingchecklist.item.ItemsScreen
 import com.minimalisticapps.packingchecklist.list.ListsScreen
+import com.minimalisticapps.packingchecklist.theme.AppTheme
 import com.minimalisticapps.packingchecklist.theme.PrimaryColor
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 val RoutesWithAddButton = listOf(
     Screen.Items.route,
@@ -66,8 +67,6 @@ class MainActivity : ComponentActivity() {
                             }
                         },
                         floatingActionButton = {
-
-
                             if (RoutesWithAddButton.contains(currentRoute)) {
                                 ExtendedFloatingActionButton(
                                     backgroundColor = PrimaryColor,
@@ -118,8 +117,14 @@ class MainActivity : ComponentActivity() {
                                         composable(route = Screen.Lists.route) {
                                             ListsScreen()
                                         }
-                                        composable(route = Screen.AssignItemToList.route) {
-                                            AssignItemToListScreen()
+                                        composable(route = Screen.EditItem.route + "/{itemId}") { navBackStack ->
+                                            val rawItemId =
+                                                navBackStack.arguments?.getString("itemId")
+                                            if (rawItemId != null) {
+                                                EditItemScreen(UUID.fromString(rawItemId))
+                                            } else {
+                                                Log.e("MainActivity", "rawItemId is null")
+                                            }
                                         }
                                     }
                                 }

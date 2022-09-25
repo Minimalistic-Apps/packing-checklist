@@ -14,6 +14,10 @@ interface DatabaseDao {
     @Query("SELECT * FROM Item ORDER BY `Item`.`order`")
     fun getItemWithLists(): Flow<List<ItemWithLists>>
 
+    @Transaction
+    @Query("SELECT * FROM Item WHERE Item.itemId = :itemId")
+    fun getItemWithList(itemId: String): Flow<ItemWithLists>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertItem(item: Item)
 
@@ -41,5 +45,11 @@ interface DatabaseDao {
     suspend fun updateMultipleLists(lists: List<ItemList>) {
         lists.forEach { updateList(it) }
     }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertListHasItem(listHasItem: ListHasItem)
+
+    @Delete
+    suspend fun deleteListHasItem(listHasItem: ListHasItem)
 
 }

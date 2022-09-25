@@ -30,8 +30,8 @@ data class ItemList(
 
 @Entity(primaryKeys = ["listId", "itemId"])
 data class ListHasItem(
-    val listId: Long,
-    val itemId: Long
+    val listId: UUID,
+    val itemId: UUID
 ) : HasKey {
     override val key: String get() = "${listId}___${itemId}"
 }

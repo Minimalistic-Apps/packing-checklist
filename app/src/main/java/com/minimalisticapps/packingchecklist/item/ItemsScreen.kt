@@ -2,7 +2,6 @@ package com.minimalisticapps.packingchecklist.item
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.minimalisticapps.packingchecklist.MainViewModel
 import com.minimalisticapps.packingchecklist.UiList
@@ -15,7 +14,8 @@ fun ItemsScreen(navController: NavHostController) {
 
     UiList(
         displayItems = items.value ?: listOf(),
-        onDelete = { viewModel.deleteItem(it.item) },
+        // Todo: SwipeToDismiss interferes with scroll
+//        onDelete = { viewModel.deleteItem(it.item) },
         content = { ItemRow(it, navController) },
         onMove = { fromIndex, toIndex ->
             val from = items.value?.get(fromIndex)
@@ -25,6 +25,5 @@ fun ItemsScreen(navController: NavHostController) {
                 viewModel.reorderItems(from.item, to.item)
             }
         },
-        height = 64.dp
     )
 }

@@ -1,23 +1,23 @@
 package com.minimalisticapps.packingchecklist.item
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
+import androidx.compose.material.Chip
+import androidx.compose.material.ChipDefaults
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.minimalisticapps.ClickToEditText
+import com.google.accompanist.flowlayout.FlowRow
 import com.minimalisticapps.packingchecklist.ItemWithLists
 import com.minimalisticapps.packingchecklist.MainViewModel
 import com.minimalisticapps.packingchecklist.Screen
 import org.koin.androidx.compose.getViewModel
+import kotlin.random.Random
 
 val NoPadding = PaddingValues(
     start = 0.dp,
@@ -26,61 +26,59 @@ val NoPadding = PaddingValues(
     bottom = 0.dp
 )
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ItemRow(itemWithLists: ItemWithLists, navController: NavHostController) {
     val viewModel = getViewModel<MainViewModel>()
 
-    Column(modifier = Modifier.padding(horizontal = 18.dp)) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 18.dp)
+            .clickable { navController.navigate(Screen.EditItem.route + "/${itemWithLists.item.itemId}") }) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(40.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            ClickToEditText(
-                text = itemWithLists.item.name,
-                isEditable = viewModel.itemIdToEdit.value == itemWithLists.item.itemId,
-                clicked = { viewModel.itemRowClicked(itemWithLists.item.itemId) },
-                onChange = { viewModel.renameItem(itemWithLists.item, it) },
-                onEditDone = { viewModel.itemRowDone(itemWithLists.item.itemId) }
-            )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(20.dp),
+            modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterStart,
         ) {
-
-            itemWithLists.lists.forEach {
-                Button(
-                    contentPadding = NoPadding,
-                    modifier = Modifier.height(20.dp),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(text = it.name)
-                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "delete",
-                    )
-                }
-            }
-            Button(
-                onClick = {
-                    viewModel.clickModifyLists(itemWithLists)
-                    navController.navigate(Screen.AssignItemToList.route)
-                },
-                contentPadding = NoPadding,
-                modifier = Modifier
-                    .height(20.dp)
-                    .width(20.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "add",
+            Row() {
+                Text(
+                    modifier = Modifier.weight(1.0f, fill = true),
+                    text = itemWithLists.item.name
                 )
+//            ClickToEditText(
+//                text = itemWithLists.item.name,
+//                isEditable = viewModel.itemIdToEdit.value == itemWithLists.item.itemId,
+//                clicked = { viewModel.itemRowClicked(itemWithLists.item.itemId) },
+//                onChange = { viewModel.renameItem(itemWithLists.item, it) },
+//                onEditDone = { viewModel.itemRowDone(itemWithLists.item.itemId) }
+//            )
+            }
+        }
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.CenterStart,
+        ) {
+            FlowRow() {
+                itemWithLists.lists.forEach { itemList ->
+                    val rnd = Random(itemList.name.hashCode())
+                    val bgColor = Color(
+                        red = rnd.nextInt(256),
+                        blue = rnd.nextInt(256),
+                        green = rnd.nextInt(256),
+                    )
 
+                    Chip(
+                        modifier = Modifier
+                            .height(20.dp)
+                            .padding(end = 4.dp),
+                        onClick = { /*TODO*/ },
+                        colors = ChipDefaults.chipColors(backgroundColor = bgColor)
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(start = 4.dp, end = 4.dp),
+                            text = itemList.name
+                        )
+                    }
+                }
             }
         }
     }

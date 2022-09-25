@@ -24,6 +24,5 @@ fun ListsScreen() {
                 viewModel.reorderLists(from.list, to.list)
             }
         },
-        height = 60.dp
     )
 }

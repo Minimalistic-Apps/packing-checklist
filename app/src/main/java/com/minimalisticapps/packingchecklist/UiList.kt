@@ -28,10 +28,9 @@ import com.minimalisticapps.packingchecklist.theme.Shapes
 @Composable
 fun <T : HasKey> UiList(
     displayItems: List<T>,
-    onDelete: ((item: T) -> Unit)?,
+    onDelete: ((item: T) -> Unit)? = null,
     content: @Composable (item: T) -> Unit,
-    onMove: ((fromIndex: Int, toIndex: Int) -> Unit)?,
-    height: Dp,
+    onMove: ((fromIndex: Int, toIndex: Int) -> Unit)? = null,
 ) {
     val isDark = isSystemInDarkTheme()
 
@@ -58,6 +57,7 @@ fun <T : HasKey> UiList(
                     SwipeToDismiss(
                         state = dismissState,
                         directions = setOf(DismissDirection.EndToStart),
+                        dismissThresholds = { FractionalThreshold(0.5f) },
                         dismissContent = {
                             Card(
                                 shape = Shapes.large,
@@ -66,7 +66,6 @@ fun <T : HasKey> UiList(
                                 ).value,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(height)
                                     .align(alignment = Alignment.CenterVertically),
                                 backgroundColor = if (isDark) BackgroundColorForDark else BackgroundColorForLight,
                             ) {
@@ -111,7 +110,6 @@ fun <T : HasKey> UiList(
                             shape = Shapes.large,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(height)
                                 .align(alignment = Alignment.CenterVertically),
                             backgroundColor = if (isDark) BackgroundColorForDark else BackgroundColorForLight,
                         ) {
