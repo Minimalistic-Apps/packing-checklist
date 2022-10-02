@@ -12,23 +12,24 @@ import java.util.*
 
 class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
 
-    private val _itemIdToEdit = mutableStateOf<UUID?>(null)
-    val itemIdToEdit: State<UUID?> = _itemIdToEdit
-
     private val _itemListIdToEdit = mutableStateOf<UUID?>(null)
     val itemListIdToEdit: State<UUID?> = _itemListIdToEdit
 
     fun getAllItems(): LiveData<List<ItemWithLists>> = dao.getItemWithLists().asLiveData()
 
-    fun addItem(): Item {
+    fun addItem(name: String, lists: Map<UUID, Boolean>): Item {
         val item = Item(
             itemId = UUID.randomUUID(),
-            name = "",
+            name = name,
             order = currentTimeMillis(),
         )
         viewModelScope.launch {
             dao.insertItem(item)
-            _itemIdToEdit.value = item.itemId
+            lists.forEach {
+                if (it.value) {
+                    dao.insertListHasItem(ListHasItem(it.key, item.itemId))
+                }
+            }
         }
 
         return item
@@ -45,14 +46,6 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
         viewModelScope.launch {
             dao.deleteItem(item)
         }
-    }
-
-    fun itemRowClicked(itemId: UUID) {
-        _itemIdToEdit.value = itemId
-    }
-
-    fun itemRowDone(itemId: UUID) {
-        _itemIdToEdit.value = null
     }
 
     fun getAllLists(): LiveData<List<ListWithItems>> = dao.getListsWithItems().asLiveData()
@@ -122,5 +115,8 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
 
     fun getItemWithList(itemId: UUID): LiveData<ItemWithLists> =
         dao.getItemWithList(itemId.toString()).asLiveData()
+
+    fun getChecklistWithItems(checklistId: UUID): LiveData<ChecklistWithItems> =
+        dao.getChecklistWithItems(checklistId.toString()).asLiveData()
 
 }

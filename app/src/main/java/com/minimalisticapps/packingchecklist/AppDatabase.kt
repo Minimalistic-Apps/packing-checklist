@@ -19,8 +19,14 @@ object UUIDConverter {
 }
 
 @Database(
-    entities = [Item::class, ItemList::class, Checklist::class, ListHasItem::class],
-    version = 4,
+    entities = [
+        Item::class,
+        ItemList::class,
+        Checklist::class,
+        ListHasItem::class,
+        CheckListHasItem::class
+    ],
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(UUIDConverter::class)

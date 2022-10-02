@@ -82,8 +82,7 @@ class MainActivity : ComponentActivity() {
                                     },
                                     onClick = {
                                         if (currentRoute == Screen.Items.route) {
-                                            val item = viewModel.addItem()
-                                            navController.navigate(Screen.EditItem.route + "/${item.itemId}")
+                                            navController.navigate(Screen.EditItem.route + "/null")
                                         } else if (currentRoute == Screen.Lists.route) {
                                             viewModel.addList()
                                         }
@@ -125,7 +124,7 @@ class MainActivity : ComponentActivity() {
                                                 navBackStack.arguments?.getString("itemId")
                                             if (rawItemId != null) {
                                                 EditItemScreen(
-                                                    UUID.fromString(rawItemId),
+                                                    if (rawItemId != "null") UUID.fromString(rawItemId) else null,
                                                     navController
                                                 )
                                             } else {

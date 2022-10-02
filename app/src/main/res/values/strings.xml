@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Packing Checklist</string>
     <string name="delete_item_confirmation">Are you sure you want to delete this item?</string>
+    <string name="delete_checklist_confirmation">Are you sure you want to delete this checklist?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 </resources>

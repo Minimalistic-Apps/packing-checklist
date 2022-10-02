@@ -2,7 +2,6 @@ package com.minimalisticapps.packingchecklist
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import java.util.*
 
 @Dao
 interface DatabaseDao {
@@ -51,5 +50,9 @@ interface DatabaseDao {
 
     @Delete
     suspend fun deleteListHasItem(listHasItem: ListHasItem)
+
+    @Transaction
+    @Query("SELECT * FROM Checklist WHERE Checklist.checklistId = :checklistId")
+    fun getChecklistWithItems(checklistId: String): Flow<ChecklistWithItems>
 
 }
