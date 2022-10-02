@@ -19,13 +19,6 @@ import com.minimalisticapps.packingchecklist.Screen
 import org.koin.androidx.compose.getViewModel
 import kotlin.random.Random
 
-val NoPadding = PaddingValues(
-    start = 0.dp,
-    top = 0.dp,
-    end = 0.dp,
-    bottom = 0.dp
-)
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ItemRow(itemWithLists: ItemWithLists, navController: NavHostController) {
@@ -54,7 +47,10 @@ fun ItemRow(itemWithLists: ItemWithLists, navController: NavHostController) {
             }
         }
         Box(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .padding(8.dp),
             contentAlignment = Alignment.CenterStart,
         ) {
             FlowRow() {
@@ -68,7 +64,7 @@ fun ItemRow(itemWithLists: ItemWithLists, navController: NavHostController) {
 
                     Chip(
                         modifier = Modifier
-                            .height(20.dp)
+                            .height(24.dp)
                             .padding(end = 4.dp),
                         onClick = { /*TODO*/ },
                         colors = ChipDefaults.chipColors(backgroundColor = bgColor)
