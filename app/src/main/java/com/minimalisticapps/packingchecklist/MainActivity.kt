@@ -121,7 +121,7 @@ class MainActivity : ComponentActivity() {
                                             val rawItemId =
                                                 navBackStack.arguments?.getString("itemId")
                                             if (rawItemId != null) {
-                                                EditItemScreen(UUID.fromString(rawItemId))
+                                                EditItemScreen(UUID.fromString(rawItemId), navController)
                                             } else {
                                                 Log.e("MainActivity", "rawItemId is null")
                                             }
