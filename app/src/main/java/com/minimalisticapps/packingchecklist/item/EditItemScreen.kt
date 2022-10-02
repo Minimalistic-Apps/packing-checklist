@@ -74,6 +74,8 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
         )
     }
 
+    val isValid = text.text.trim() != ""
+
     Column() {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -90,7 +92,7 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
                     value = text,
                     onValueChange = {
                         text = it
-                        if (itemToChangeLists != null) {
+                        if (isValid && itemToChangeLists != null) {
                             viewModel.renameItem(itemToChangeLists.item, text.text)
                         }
                     },
@@ -98,6 +100,7 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
                     keyboardActions = KeyboardActions(onDone = {
                         focusManager.clearFocus()
                     }),
+                    isError = !isValid
                 )
             }
             Box(
@@ -118,9 +121,12 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
                     )
                 } else {
                     Button(
+                        enabled = isValid,
                         modifier = Modifier
                             .fillMaxWidth(),
                         onClick = {
+                            if (text.text == "") return@Button
+
                             viewModel.addItem(name = text.text, checkedLists)
                             navController.navigate(Screen.Items.route)
                         },
