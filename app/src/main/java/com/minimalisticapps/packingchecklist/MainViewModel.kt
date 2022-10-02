@@ -116,7 +116,7 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
     fun getItemWithList(itemId: UUID): LiveData<ItemWithLists> =
         dao.getItemWithList(itemId.toString()).asLiveData()
 
-    fun getChecklistWithItems(checklistId: UUID): LiveData<ChecklistWithItems> =
-        dao.getChecklistWithItems(checklistId.toString()).asLiveData()
+    fun getChecklistWithListsAndItems(checklistId: UUID): LiveData<ChecklistWithListsAndItems> =
+        dao.getChecklistWithListsAndItems(checklistId.toString()).asLiveData()
 
 }

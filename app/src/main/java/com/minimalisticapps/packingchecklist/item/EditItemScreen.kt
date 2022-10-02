@@ -14,8 +14,11 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -43,9 +46,12 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
     }
 
     var text by remember {
+        val initText = itemToChangeLists?.item?.name ?: ""
+
         mutableStateOf(
             TextFieldValue(
-                text = itemToChangeLists?.item?.name ?: ""
+                text = initText,
+                selection = TextRange(initText.length, initText.length)
             )
         )
     }
@@ -55,8 +61,6 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
         )
     }
     var showConfirmationDialog by remember { mutableStateOf(false) }
-
-    val focusManager = LocalFocusManager.current
 
     if (showConfirmationDialog) {
         ConfirmationDialog(
@@ -76,6 +80,9 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
 
     val isValid = text.text.trim() != ""
 
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
+
     Column() {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -87,7 +94,9 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
                     .weight(3.0f)
             ) {
                 TextField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
                     singleLine = true,
                     value = text,
                     onValueChange = {
@@ -186,5 +195,9 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
                 onMove = null,
             )
         }
+    }
+
+    SideEffect {
+        focusRequester.requestFocus()
     }
 }

@@ -71,23 +71,38 @@ data class Checklist(
 }
 
 @Entity(primaryKeys = ["checklistId", "itemId"])
-data class CheckListHasItem(
+data class ChecklistHasItem(
     val checklistId: UUID,
     val itemId: UUID
 ) : HasKey {
     override val key: String get() = "${checklistId}___${itemId}"
 }
 
-data class ChecklistWithItems(
+@Entity(primaryKeys = ["checklistId", "listId"])
+data class ChecklistHasList(
+    val checklistId: UUID,
+    val listId: UUID
+) : HasKey {
+    override val key: String get() = "${checklistId}___${listId}"
+}
+
+data class ChecklistWithListsAndItems(
     @Embedded val checklist: Checklist,
+
     @Relation(
         parentColumn = "checklistId",
         entityColumn = "itemId",
-        associateBy = Junction(CheckListHasItem::class)
+        associateBy = Junction(ChecklistHasItem::class)
     )
-    val items: List<Item>
+    val items: List<Item>,
+
+    @Relation(
+        parentColumn = "checklistId",
+        entityColumn = "listId",
+        associateBy = Junction(ChecklistHasList::class)
+    )
+    val lists: List<ItemList>
+
 ) : HasKey {
     override val key: String get() = checklist.checklistId.toString()
 }
-
-

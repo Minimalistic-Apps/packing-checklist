@@ -53,6 +53,6 @@ interface DatabaseDao {
 
     @Transaction
     @Query("SELECT * FROM Checklist WHERE Checklist.checklistId = :checklistId")
-    fun getChecklistWithItems(checklistId: String): Flow<ChecklistWithItems>
+    fun getChecklistWithListsAndItems(checklistId: String): Flow<ChecklistWithListsAndItems>
 
 }
