@@ -20,16 +20,18 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
 
     fun getAllItems(): LiveData<List<ItemWithLists>> = dao.getItemWithLists().asLiveData()
 
-    fun addItem() {
+    fun addItem(): Item {
+        val item = Item(
+            itemId = UUID.randomUUID(),
+            name = "",
+            order = currentTimeMillis(),
+        )
         viewModelScope.launch {
-            val item = Item(
-                itemId = UUID.randomUUID(),
-                name = "",
-                order = currentTimeMillis(),
-            )
             dao.insertItem(item)
             _itemIdToEdit.value = item.itemId
         }
+
+        return item
     }
 
     fun renameItem(item: Item, name: String) {

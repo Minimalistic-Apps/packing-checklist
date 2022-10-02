@@ -82,7 +82,8 @@ class MainActivity : ComponentActivity() {
                                     },
                                     onClick = {
                                         if (currentRoute == Screen.Items.route) {
-                                            viewModel.addItem()
+                                            val item = viewModel.addItem()
+                                            navController.navigate(Screen.EditItem.route + "/${item.itemId}")
                                         } else if (currentRoute == Screen.Lists.route) {
                                             viewModel.addList()
                                         }
@@ -92,7 +93,9 @@ class MainActivity : ComponentActivity() {
                         },
                         content = {
                             Column(
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(it)
                             ) {
                                 Row(
                                     modifier = Modifier
@@ -121,7 +124,10 @@ class MainActivity : ComponentActivity() {
                                             val rawItemId =
                                                 navBackStack.arguments?.getString("itemId")
                                             if (rawItemId != null) {
-                                                EditItemScreen(UUID.fromString(rawItemId), navController)
+                                                EditItemScreen(
+                                                    UUID.fromString(rawItemId),
+                                                    navController
+                                                )
                                             } else {
                                                 Log.e("MainActivity", "rawItemId is null")
                                             }

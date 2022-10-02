@@ -14,20 +14,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.minimalisticapps.packingchecklist.ItemWithLists
-import com.minimalisticapps.packingchecklist.MainViewModel
 import com.minimalisticapps.packingchecklist.Screen
-import org.koin.androidx.compose.getViewModel
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ItemRow(itemWithLists: ItemWithLists, navController: NavHostController) {
-    val viewModel = getViewModel<MainViewModel>()
+    val openDetail = {
+        navController.navigate(Screen.EditItem.route + "/${itemWithLists.item.itemId}")
+    }
 
     Column(
         modifier = Modifier
-            .padding(horizontal = 18.dp)
-            .clickable { navController.navigate(Screen.EditItem.route + "/${itemWithLists.item.itemId}") }) {
+            .padding(top = 8.dp, bottom = 8.dp, start = 18.dp, end = 18.dp)
+            .clickable { openDetail() }
+    ) {
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterStart,
@@ -37,20 +38,13 @@ fun ItemRow(itemWithLists: ItemWithLists, navController: NavHostController) {
                     modifier = Modifier.weight(1.0f, fill = true),
                     text = itemWithLists.item.name
                 )
-//            ClickToEditText(
-//                text = itemWithLists.item.name,
-//                isEditable = viewModel.itemIdToEdit.value == itemWithLists.item.itemId,
-//                clicked = { viewModel.itemRowClicked(itemWithLists.item.itemId) },
-//                onChange = { viewModel.renameItem(itemWithLists.item, it) },
-//                onEditDone = { viewModel.itemRowDone(itemWithLists.item.itemId) }
-//            )
             }
         }
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(40.dp)
-                .padding(8.dp),
+                .padding(top = 4.dp),
             contentAlignment = Alignment.CenterStart,
         ) {
             FlowRow() {
@@ -65,12 +59,12 @@ fun ItemRow(itemWithLists: ItemWithLists, navController: NavHostController) {
                     Chip(
                         modifier = Modifier
                             .height(24.dp)
-                            .padding(end = 4.dp),
-                        onClick = { /*TODO*/ },
+                            .padding(end = 1.dp, bottom = 1.dp),
+                        onClick = { openDetail() },
                         colors = ChipDefaults.chipColors(backgroundColor = bgColor)
                     ) {
                         Text(
-                            modifier = Modifier.padding(start = 4.dp, end = 4.dp),
+                            modifier = Modifier.padding(start = 0.dp, end = 0.dp),
                             text = itemList.name
                         )
                     }
