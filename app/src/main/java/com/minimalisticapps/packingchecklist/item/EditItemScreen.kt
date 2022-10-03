@@ -83,7 +83,12 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
-    Column() {
+    DisposableEffect(Unit) {
+        focusRequester.requestFocus()
+        onDispose { }
+    }
+
+    Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -195,9 +200,5 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
                 onMove = null,
             )
         }
-    }
-
-    SideEffect {
-        focusRequester.requestFocus()
     }
 }
