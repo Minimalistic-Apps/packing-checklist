@@ -1,10 +1,11 @@
-package com.minimalisticapps
+package com.minimalisticapps.packingchecklist
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,9 +15,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.minimalisticapps.packingchecklist.CustomTextField
 import kotlinx.coroutines.delay
 
 @Composable
@@ -56,8 +54,7 @@ fun ClickToEditText(
                 else
                     rowModifier
                 )
-            .fillMaxWidth()
-            .height(40.dp),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -86,15 +83,7 @@ fun ClickToEditText(
                 onValueChange = { inputText = it },
             )
         } else {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.body1,
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .weight(8f)
-                    .fillMaxWidth()
-                    .padding(start = 6.dp, end = 6.dp)
-            )
+            Text(text = text)
         }
     }
 }
