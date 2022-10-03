@@ -55,4 +55,28 @@ interface DatabaseDao {
     @Query("SELECT * FROM Checklist WHERE Checklist.checklistId = :checklistId")
     fun getChecklistWithListsAndItems(checklistId: String): Flow<ChecklistWithListsAndItems>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertChecklist(checklist: Checklist)
+
+    @Update
+    suspend fun updateChecklist(checklist: Checklist)
+
+    @Delete
+    suspend fun deleteChecklist(checklist: Checklist)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertChecklistHasList(checklistHasList: ChecklistHasList)
+
+    @Delete
+    suspend fun deleteChecklistHasList(checklistHasList: ChecklistHasList)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertChecklistHasItem(checklistHasItem: ChecklistHasItem)
+
+    @Delete
+    suspend fun deleteChecklistHasItem(checklistHasItem: ChecklistHasItem)
+
+    @Transaction
+    @Query("SELECT * FROM Checklist ORDER BY `Checklist`.`order`")
+    fun getChecklists(): Flow<List<Checklist>>
 }

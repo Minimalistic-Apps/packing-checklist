@@ -1,6 +1,5 @@
 package com.minimalisticapps.packingchecklist
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -14,13 +13,13 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.minimalisticapps.packingchecklist.checklist.ChecklistsScreen
+import com.minimalisticapps.packingchecklist.checklist.EditChecklistScreen
 import com.minimalisticapps.packingchecklist.item.EditItemScreen
 import com.minimalisticapps.packingchecklist.item.ItemsScreen
 import com.minimalisticapps.packingchecklist.list.ListsScreen
@@ -30,8 +29,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 val RoutesWithAddButton = listOf(
+    Screen.Checklists.route,
+    Screen.Lists.route,
     Screen.Items.route,
-    Screen.Lists.route
 )
 
 val RoutesWithFooter = listOf(
@@ -48,7 +48,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            val mContext = LocalContext.current as Activity
 
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
@@ -81,10 +80,16 @@ class MainActivity : ComponentActivity() {
                                         Text(text = "Add", color = Color.White)
                                     },
                                     onClick = {
-                                        if (currentRoute == Screen.Items.route) {
-                                            navController.navigate(Screen.EditItem.route + "/null")
-                                        } else if (currentRoute == Screen.Lists.route) {
-                                            viewModel.addList()
+                                        when (currentRoute) {
+                                            Screen.Items.route -> {
+                                                navController.navigate(Screen.EditItem.route + "/null")
+                                            }
+                                            Screen.Lists.route -> {
+                                                viewModel.addList()
+                                            }
+                                            Screen.Checklists.route -> {
+                                                navController.navigate(Screen.EditChecklist.route + "/null")
+                                            }
                                         }
                                     }
                                 )
@@ -111,7 +116,7 @@ class MainActivity : ComponentActivity() {
                                     )
                                     {
                                         composable(route = Screen.Checklists.route) {
-                                            ChecklistsScreen()
+                                            ChecklistsScreen(navController)
                                         }
                                         composable(route = Screen.Items.route) {
                                             ItemsScreen(navController)
@@ -124,6 +129,18 @@ class MainActivity : ComponentActivity() {
                                                 navBackStack.arguments?.getString("itemId")
                                             if (rawItemId != null) {
                                                 EditItemScreen(
+                                                    if (rawItemId != "null") UUID.fromString(rawItemId) else null,
+                                                    navController
+                                                )
+                                            } else {
+                                                Log.e("MainActivity", "rawItemId is null")
+                                            }
+                                        }
+                                        composable(route = Screen.EditChecklist.route + "/{itemId}") { navBackStack ->
+                                            val rawItemId =
+                                                navBackStack.arguments?.getString("itemId")
+                                            if (rawItemId != null) {
+                                                EditChecklistScreen(
                                                     if (rawItemId != "null") UUID.fromString(rawItemId) else null,
                                                     navController
                                                 )

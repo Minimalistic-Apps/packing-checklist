@@ -119,4 +119,54 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
     fun getChecklistWithListsAndItems(checklistId: UUID): LiveData<ChecklistWithListsAndItems> =
         dao.getChecklistWithListsAndItems(checklistId.toString()).asLiveData()
 
+    fun renameChecklist(checklist: Checklist, name: String) {
+        checklist.name = name
+        viewModelScope.launch {
+            dao.updateChecklist(checklist)
+        }
+    }
+
+    fun deleteChecklist(checklist: Checklist) {
+        viewModelScope.launch {
+            dao.deleteChecklist(checklist)
+        }
+    }
+
+    fun getAllChecklists(): LiveData<List<Checklist>> = dao.getChecklists().asLiveData()
+
+    fun createChecklist(
+        name: String,
+        checkedLists: Map<UUID, Boolean>,
+        listWithItems: List<ListWithItems>
+    ) {
+        val checklist = Checklist(
+            checklistId = UUID.randomUUID(),
+            name = name,
+            order = currentTimeMillis(),
+            isFinished = false
+        )
+        viewModelScope.launch {
+            dao.insertChecklist(checklist)
+            checkedLists.forEach {
+                if (it.value) {
+                    dao.insertChecklistHasList(
+                        ChecklistHasList(
+                            checklistId = checklist.checklistId,
+                            listId = it.key
+                        )
+                    )
+                    val listWithItem = listWithItems.find { it2 -> it.key == it2.list.listId }
+
+                    listWithItem?.items?.forEach { itItem ->
+                        dao.insertChecklistHasItem(
+                            ChecklistHasItem(
+                                checklistId = checklist.checklistId,
+                                itemId = itItem.itemId
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
