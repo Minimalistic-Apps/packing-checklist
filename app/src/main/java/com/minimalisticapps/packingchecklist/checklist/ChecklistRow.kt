@@ -17,15 +17,19 @@ fun ChecklistRow(checklist: Checklist, navController: NavHostController) {
     val openDetail = {
         navController.navigate(Screen.EditChecklist.route + "/${checklist.checklistId}")
     }
+    val openChecklist = {
+        navController.navigate(Screen.Checklist.route + "/${checklist.checklistId}")
+    }
 
     UiRow(
-        onClick = openDetail,
+        onClick = openChecklist,
+        onLongClick = openDetail,
         content = {
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.CenterStart,
             ) {
-                Row() {
+                Row {
                     Text(
                         modifier = Modifier.weight(1.0f, fill = true),
                         text = checklist.name

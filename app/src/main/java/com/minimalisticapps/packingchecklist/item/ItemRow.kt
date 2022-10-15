@@ -28,6 +28,7 @@ fun ItemRow(itemWithLists: ItemWithLists, navController: NavHostController) {
 
     UiRow(
         onClick = { openDetail() },
+        onLongClick = null,
         content = {
             Column {
                 Text(text = itemWithLists.item.name)

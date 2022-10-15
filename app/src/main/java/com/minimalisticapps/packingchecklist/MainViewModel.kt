@@ -161,7 +161,9 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
                         dao.insertChecklistHasItem(
                             ChecklistHasItem(
                                 checklistId = checklist.checklistId,
-                                itemId = itItem.itemId
+                                itemId = itItem.itemId,
+                                item = itItem,
+                                isChecked = false
                             )
                         )
                     }
