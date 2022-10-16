@@ -24,6 +24,7 @@ fun ClickToEditText(
     clicked: () -> Unit,
     onChange: (text: String) -> Unit,
     onEditDone: () -> Unit,
+    modifier: Modifier? = null,
 ) {
     val focusRequester = remember { FocusRequester() }
 
@@ -36,7 +37,7 @@ fun ClickToEditText(
             )
         )
     }
-    val rowModifier = Modifier.fillMaxWidth()
+    val rowModifier = (modifier ?: Modifier).fillMaxWidth()
 
     Row(
         modifier = (

@@ -27,7 +27,7 @@ object UUIDConverter {
         ChecklistHasItem::class,
         ChecklistHasList::class,
     ],
-    version = 7,
+    version = 10,
     exportSchema = false
 )
 @TypeConverters(UUIDConverter::class)

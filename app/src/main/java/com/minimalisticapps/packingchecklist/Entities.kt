@@ -73,16 +73,10 @@ data class Checklist(
 @Entity(primaryKeys = ["checklistId", "itemId"])
 data class ChecklistHasItem(
     val checklistId: UUID,
-    val itemId: UUID,
-    val isChecked: Boolean,
-
-    @Relation(
-        parentColumn = "checklistId",
-        entityColumn = "itemId",
-    )
-    val item: Item,
+    var isChecked: Boolean,
+    @Embedded val item: Item,
 ) : HasKey {
-    override val key: String get() = "${checklistId}___${itemId}"
+    override val key: String get() = "${checklistId}___${item.itemId}"
 }
 
 @Entity(primaryKeys = ["checklistId", "listId"])
@@ -100,8 +94,9 @@ data class ChecklistWithListsAndItems(
         parentColumn = "checklistId",
         entityColumn = "itemId",
         entity = ChecklistHasItem::class,
+        associateBy = Junction(ChecklistHasItem::class)
     )
-    val items: List<ChecklistHasItem>,
+    val checklistHasItems: List<ChecklistHasItem>,
 
     @Relation(
         parentColumn = "checklistId",

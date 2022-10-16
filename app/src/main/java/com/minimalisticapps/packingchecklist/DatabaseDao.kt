@@ -73,6 +73,9 @@ interface DatabaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertChecklistHasItem(checklistHasItem: ChecklistHasItem)
 
+    @Update
+    suspend fun updateChecklistHasItem(checklistHasItem: ChecklistHasItem)
+
     @Delete
     suspend fun deleteChecklistHasItem(checklistHasItem: ChecklistHasItem)
 

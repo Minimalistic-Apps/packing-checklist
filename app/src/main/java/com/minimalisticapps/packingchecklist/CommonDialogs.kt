@@ -1,4 +1,4 @@
-package com.minimalisticapps
+package com.minimalisticapps.packingchecklist
 
 import android.app.Activity
 import androidx.compose.material.AlertDialog
@@ -6,7 +6,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.minimalisticapps.packingchecklist.R
 
 @Composable
 fun ConfirmationDialog(

@@ -161,7 +161,6 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
                         dao.insertChecklistHasItem(
                             ChecklistHasItem(
                                 checklistId = checklist.checklistId,
-                                itemId = itItem.itemId,
                                 item = itItem,
                                 isChecked = false
                             )
@@ -169,6 +168,12 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
                     }
                 }
             }
+        }
+    }
+
+    fun toggleChecklistItem(checklistHasItem: ChecklistHasItem) {
+        viewModelScope.launch {
+            dao.updateChecklistHasItem(checklistHasItem)
         }
     }
 }

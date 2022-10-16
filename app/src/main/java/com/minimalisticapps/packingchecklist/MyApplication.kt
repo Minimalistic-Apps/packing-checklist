@@ -2,9 +2,9 @@ package com.minimalisticapps.packingchecklist
 
 import android.app.Application
 import androidx.room.Room
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 

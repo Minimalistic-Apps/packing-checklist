@@ -23,11 +23,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.minimalisticapps.ConfirmationDialog
-import com.minimalisticapps.packingchecklist.MainViewModel
+import com.minimalisticapps.packingchecklist.*
 import com.minimalisticapps.packingchecklist.R
-import com.minimalisticapps.packingchecklist.Screen
-import com.minimalisticapps.packingchecklist.UiList
 import com.minimalisticapps.packingchecklist.theme.PrimaryColorLight
 import org.koin.androidx.compose.getViewModel
 import java.util.*
@@ -168,17 +165,14 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
             UiList(
                 displayItems = itemLists.value ?: listOf(),
                 onDelete = null,
+                onMove = null,
                 content = {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp)
-                    ) {
+                    Row {
                         val checked = checkedLists[it.list.listId] ?: false
 
                         Checkbox(
                             checked = checked,
-                            modifier = Modifier.padding(16.dp),
+                            modifier = Modifier.align(alignment = Alignment.CenterVertically),
                             onCheckedChange = { newChecked ->
                                 checkedLists = checkedLists.plus(Pair(it.list.listId, newChecked))
                                 if (itemToChangeLists != null) {
@@ -188,7 +182,6 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
                                         newChecked,
                                     )
                                 }
-
                             },
                         )
                         Text(
@@ -197,7 +190,6 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
                         )
                     }
                 },
-                onMove = null,
             )
         }
     }

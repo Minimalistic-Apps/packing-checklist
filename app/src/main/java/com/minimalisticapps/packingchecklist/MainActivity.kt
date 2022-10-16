@@ -160,8 +160,7 @@ class MainActivity : ComponentActivity() {
                                                 ChecklistScreen(
                                                     if (rawItemId != "null") UUID.fromString(
                                                         rawItemId
-                                                    ) else null,
-                                                    navController
+                                                    ) else null
                                                 )
                                             } else {
                                                 Log.e("MainActivity", "rawItemId is null")

@@ -23,11 +23,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.minimalisticapps.ConfirmationDialog
-import com.minimalisticapps.packingchecklist.MainViewModel
+import com.minimalisticapps.packingchecklist.*
 import com.minimalisticapps.packingchecklist.R
-import com.minimalisticapps.packingchecklist.Screen
-import com.minimalisticapps.packingchecklist.UiList
 import com.minimalisticapps.packingchecklist.theme.PrimaryColorLight
 import org.koin.androidx.compose.getViewModel
 import java.util.*
@@ -180,7 +177,7 @@ fun EditChecklistScreen(itemId: UUID?, navController: NavHostController) {
 
                         Checkbox(
                             checked = checked,
-                            modifier = Modifier.padding(16.dp),
+                            modifier = Modifier.padding(4.dp),
                             onCheckedChange = { newChecked ->
                                 checkedLists = checkedLists.plus(Pair(it.list.listId, newChecked))
 //                                if (checklistToChangeLists != null) {
