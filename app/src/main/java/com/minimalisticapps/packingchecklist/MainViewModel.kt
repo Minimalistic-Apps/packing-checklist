@@ -79,7 +79,7 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
         _itemListIdToEdit.value = listId
     }
 
-    fun listRowDone(listId: UUID) {
+    fun listRowDone() {
         _itemListIdToEdit.value = null
     }
 
@@ -132,7 +132,8 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
         }
     }
 
-    fun getAllChecklists(): LiveData<List<Checklist>> = dao.getChecklists().asLiveData()
+    fun getAllChecklists(): LiveData<List<ChecklistWithListsAndItems>> =
+        dao.getChecklists().asLiveData()
 
     fun createChecklist(
         name: String,

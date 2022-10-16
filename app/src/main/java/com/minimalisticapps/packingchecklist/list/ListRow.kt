@@ -22,7 +22,8 @@ fun ListRow(listWithItems: ListWithItems) {
                 isEditable = viewModel.itemListIdToEdit.value == listWithItems.list.listId,
                 clicked = { viewModel.listRowClicked(listWithItems.list.listId) },
                 onChange = { viewModel.renameList(listWithItems.list, it) },
-                onEditDone = { viewModel.listRowDone(listWithItems.list.listId) }
+                onEditDone = { viewModel.listRowDone() }
             )
-        })
+        }
+    )
 }

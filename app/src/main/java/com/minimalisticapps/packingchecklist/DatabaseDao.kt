@@ -81,5 +81,5 @@ interface DatabaseDao {
 
     @Transaction
     @Query("SELECT * FROM Checklist ORDER BY `Checklist`.`order`")
-    fun getChecklists(): Flow<List<Checklist>>
+    fun getChecklists(): Flow<List<ChecklistWithListsAndItems>>
 }

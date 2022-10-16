@@ -1,6 +1,5 @@
 package com.minimalisticapps.packingchecklist.list
 
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import kotlin.math.abs
 import kotlin.math.min
@@ -26,14 +25,13 @@ private fun randomColorWithGivenBrightness(name: String, min: Double, max: Doubl
     val rnd = Random(name.hashCode())
 
     var closestColor = randomColor(rnd)
-    var closestBrightness = subjectiveBrightness(closestColor)
+    val closestBrightness = subjectiveBrightness(closestColor)
     var closestDistance = distance(closestBrightness, min, max)
 
     for (i in 1..40) {
         val color = randomColor(rnd)
         val brightness = subjectiveBrightness(color)
         if (min < brightness && brightness < max) {
-            Log.i("$i OK brightness", "$name -- $brightness")
             return color
         }
 
@@ -41,12 +39,9 @@ private fun randomColorWithGivenBrightness(name: String, min: Double, max: Doubl
 
         if (distance < closestDistance) {
             closestColor = color
-            closestBrightness = brightness
             closestDistance = distance
         }
     }
-
-    Log.i("Fallback brightness", "$name -- $closestBrightness")
 
     return closestColor
 }
