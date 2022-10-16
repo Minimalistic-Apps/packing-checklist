@@ -1,5 +1,6 @@
 package com.minimalisticapps.packingchecklist.item
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -10,14 +11,13 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.minimalisticapps.packingchecklist.ItemWithLists
 import com.minimalisticapps.packingchecklist.Screen
 import com.minimalisticapps.packingchecklist.UiRow
-import kotlin.random.Random
+import com.minimalisticapps.packingchecklist.list.calculateListColor
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -39,11 +39,9 @@ fun ItemRow(itemWithLists: ItemWithLists, navController: NavHostController) {
                         .padding(top = 4.dp),
                 ) {
                     itemWithLists.lists.forEach { itemList ->
-                        val rnd = Random(itemList.name.hashCode())
-                        val bgColor = Color(
-                            red = rnd.nextInt(256),
-                            blue = rnd.nextInt(256),
-                            green = rnd.nextInt(256),
+                        val bgColor = calculateListColor(
+                            "${itemList.name}${itemList.listId}",
+                            isSystemInDarkTheme()
                         )
 
                         Chip(
