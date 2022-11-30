@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,7 +15,8 @@ import androidx.compose.ui.unit.dp
 fun UiRow(
     content: @Composable () -> Unit,
     onClick: (() -> Unit)? = null,
-    onLongClick: (() -> Unit)? = null
+    onLongClick: (() -> Unit)? = null,
+    modifier: Modifier? = null
 ) {
     Column(
         modifier = if (onClick != null) Modifier.combinedClickable(
@@ -22,7 +24,16 @@ fun UiRow(
             onLongClick = if (onLongClick != null) ({ onLongClick() }) else null,
         ) else Modifier
     ) {
-        Box(modifier = Modifier.padding(top = 8.dp, bottom = 8.dp, start = 18.dp, end = 18.dp)) {
+        Box(
+            modifier = (modifier ?: Modifier)
+                .padding(
+                    top = 8.dp,
+                    bottom = 8.dp,
+                    start = 18.dp,
+                    end = 18.dp
+                )
+                .fillMaxWidth()
+        ) {
             content()
         }
     }

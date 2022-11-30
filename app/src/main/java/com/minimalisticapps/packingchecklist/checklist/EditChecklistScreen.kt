@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
@@ -65,9 +66,9 @@ fun EditChecklistScreen(itemId: UUID?, navController: NavHostController) {
             onPositiveClick = {
                 showConfirmationDialog = false
                 if (checklistToChangeLists != null) {
-                    viewModel.deleteChecklist(checklistToChangeLists.checklist)
+                    viewModel.deleteChecklist(checklistToChangeLists)
                 }
-                navController.navigate(Screen.Items.route)
+                navController.navigate(Screen.Checklists.route)
             },
             onDismiss = {
                 showConfirmationDialog = false
@@ -114,14 +115,15 @@ fun EditChecklistScreen(itemId: UUID?, navController: NavHostController) {
                     isError = !isValid
                 )
             }
-            Box(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .width(48.dp)
-                    .padding(4.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                if (itemId != null) {
+            if (itemId != null) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .width(48.dp)
+                        .padding(4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+
                     Icon(
                         Icons.Default.Delete,
                         contentDescription = "Delete Icon",
@@ -130,34 +132,43 @@ fun EditChecklistScreen(itemId: UUID?, navController: NavHostController) {
                             .height(32.dp)
                             .clickable { showConfirmationDialog = true }
                     )
-                } else {
-                    Button(
-                        enabled = isValid,
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        onClick = {
-                            if (text.text == "") return@Button
-
-                            itemLists.value?.let {
-                                viewModel.createChecklist(name = text.text, checkedLists, it)
-                                navController.navigate(Screen.Checklists.route)
-                            }
-                        },
-                        content = {
-                            Icon(
-                                Icons.Default.Done,
-                                contentDescription = "Done",
-                                modifier = Modifier
-                                    .width(32.dp)
-                                    .height(32.dp)
-                                    .scale(4f)
-                            )
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = PrimaryColorLight
-                        ),
-                    )
                 }
+            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .width(48.dp)
+                    .padding(4.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Button(
+                    enabled = isValid,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    onClick = {
+                        if (text.text == "") return@Button
+
+                        itemLists.value?.let {
+                            if (itemId == null) {
+                                viewModel.createChecklist(name = text.text, checkedLists, it)
+                            }
+                            navController.navigate(Screen.Checklists.route)
+                        }
+                    },
+                    content = {
+                        Icon(
+                            imageVector = if (itemId == null) Icons.Default.Done else Icons.Default.ArrowBack,
+                            contentDescription = "Done",
+                            modifier = Modifier
+                                .width(32.dp)
+                                .height(32.dp)
+                                .scale(4f)
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = PrimaryColorLight
+                    ),
+                )
             }
         }
         Box(

@@ -1,7 +1,5 @@
 package com.minimalisticapps.packingchecklist
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -11,9 +9,6 @@ import java.lang.System.currentTimeMillis
 import java.util.*
 
 class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
-
-    private val _itemListIdToEdit = mutableStateOf<UUID?>(null)
-    val itemListIdToEdit: State<UUID?> = _itemListIdToEdit
 
     fun getAllItems(): LiveData<List<ItemWithLists>> = dao.getItemWithLists().asLiveData()
 
@@ -63,24 +58,15 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
         }
     }
 
-    fun addList() {
+    fun addList(name: String) {
         viewModelScope.launch {
             val itemList = ItemList(
                 listId = UUID.randomUUID(),
-                name = "",
+                name = name,
                 order = currentTimeMillis(),
             )
             dao.insertList(itemList)
-            _itemListIdToEdit.value = itemList.listId
         }
-    }
-
-    fun listRowClicked(listId: UUID) {
-        _itemListIdToEdit.value = listId
-    }
-
-    fun listRowDone() {
-        _itemListIdToEdit.value = null
     }
 
     fun reorderItems(from: Item, to: Item) {
@@ -116,6 +102,9 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
     fun getItemWithList(itemId: UUID): LiveData<ItemWithLists> =
         dao.getItemWithList(itemId.toString()).asLiveData()
 
+    fun getList(itemId: UUID): LiveData<ListWithItems> =
+        dao.getList(itemId.toString()).asLiveData()
+
     fun getChecklistWithListsAndItems(checklistId: UUID): LiveData<ChecklistWithListsAndItems> =
         dao.getChecklistWithListsAndItems(checklistId.toString()).asLiveData()
 
@@ -126,9 +115,20 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
         }
     }
 
-    fun deleteChecklist(checklist: Checklist) {
+    fun deleteChecklist(checklist: ChecklistWithListsAndItems) {
         viewModelScope.launch {
-            dao.deleteChecklist(checklist)
+            checklist.lists.forEach {
+                dao.deleteChecklistHasList(
+                    ChecklistHasList(
+                        checklistId = checklist.checklist.checklistId,
+                        listId = it.listId
+                    )
+                )
+            }
+            checklist.checklistHasItems.forEach {
+                dao.deleteChecklistHasItem(it)
+            }
+            dao.deleteChecklist(checklist.checklist)
         }
     }
 
@@ -148,6 +148,9 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
         )
         viewModelScope.launch {
             dao.insertChecklist(checklist)
+
+            val itemsMap: MutableMap<UUID, Item> = mutableMapOf()
+
             checkedLists.forEach {
                 if (it.value) {
                     dao.insertChecklistHasList(
@@ -159,15 +162,19 @@ class MainViewModel(private val dao: DatabaseDao) : ViewModel() {
                     val listWithItem = listWithItems.find { it2 -> it.key == it2.list.listId }
 
                     listWithItem?.items?.forEach { itItem ->
-                        dao.insertChecklistHasItem(
-                            ChecklistHasItem(
-                                checklistId = checklist.checklistId,
-                                item = itItem,
-                                isChecked = false
-                            )
-                        )
+                        itemsMap[itItem.itemId] = itItem
                     }
                 }
+            }
+
+            itemsMap.forEach {
+                dao.insertChecklistHasItem(
+                    ChecklistHasItem(
+                        checklistId = checklist.checklistId,
+                        item = it.value,
+                        isChecked = false
+                    )
+                )
             }
         }
     }

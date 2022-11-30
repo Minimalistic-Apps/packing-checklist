@@ -39,7 +39,6 @@ fun ChecklistRow(checklist: ChecklistWithListsAndItems, navController: NavHostCo
                         }
                     }
                 }
-
             }
         }
     )

@@ -1,11 +1,14 @@
-package com.minimalisticapps.packingchecklist.item
+package com.minimalisticapps.packingchecklist.list
 
 import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -24,27 +27,28 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.minimalisticapps.packingchecklist.*
+import com.minimalisticapps.packingchecklist.ConfirmationDialog
+import com.minimalisticapps.packingchecklist.MainViewModel
 import com.minimalisticapps.packingchecklist.R
+import com.minimalisticapps.packingchecklist.Screen
 import com.minimalisticapps.packingchecklist.theme.PrimaryColorLight
 import org.koin.androidx.compose.getViewModel
 import java.util.*
 
 @Composable
-fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
+fun EditListScreen(itemId: UUID?, navController: NavHostController) {
     val mContext = LocalContext.current as Activity
     val viewModel = getViewModel<MainViewModel>()
 
-    val itemLists = viewModel.getAllLists().observeAsState()
-    val itemToChangeLists =
-        itemId?.let { viewModel.getItemWithList(it).observeAsState().value }
+    val list =
+        itemId?.let { viewModel.getList(it).observeAsState().value }
 
-    if (itemId != null && itemToChangeLists == null) {
+    if (itemId != null && list == null) {
         return
     }
 
     var text by remember {
-        val initText = itemToChangeLists?.item?.name ?: ""
+        val initText = list?.list?.name ?: ""
 
         mutableStateOf(
             TextFieldValue(
@@ -53,22 +57,17 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
             )
         )
     }
-    var checkedLists by remember {
-        mutableStateOf(
-            itemToChangeLists?.lists?.associate { Pair(it.listId, true) } ?: mapOf()
-        )
-    }
     var showConfirmationDialog by remember { mutableStateOf(false) }
 
     if (showConfirmationDialog) {
         ConfirmationDialog(
-            text = mContext.getString(R.string.delete_item_confirmation),
+            text = mContext.getString(R.string.delete_list_confirmation),
             onPositiveClick = {
                 showConfirmationDialog = false
-                if (itemToChangeLists != null) {
-                    viewModel.deleteItem(itemToChangeLists.item)
+                if (list != null) {
+                    viewModel.deleteList(list.list)
                 }
-                navController.navigate(Screen.Items.route)
+                navController.navigate(Screen.Lists.route)
             },
             onDismiss = {
                 showConfirmationDialog = false
@@ -104,8 +103,8 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
                     value = text,
                     onValueChange = {
                         text = it
-                        if (isValid && itemToChangeLists != null) {
-                            viewModel.renameItem(itemToChangeLists.item, text.text)
+                        if (isValid && list != null) {
+                            viewModel.renameList(list.list, text.text)
                         }
                     },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -149,9 +148,9 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
                         if (text.text == "") return@Button
 
                         if (itemId == null) {
-                            viewModel.addItem(name = text.text, checkedLists)
+                            viewModel.addList(text.text)
                         }
-                        navController.navigate(Screen.Items.route)
+                        navController.navigate(Screen.Lists.route)
                     },
                     content = {
                         Icon(
@@ -168,40 +167,6 @@ fun EditItemScreen(itemId: UUID?, navController: NavHostController) {
                     ),
                 )
             }
-        }
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.CenterStart,
-        ) {
-            UiList(
-                displayItems = itemLists.value ?: listOf(),
-                onDelete = null,
-                onMove = null,
-                content = {
-                    Row {
-                        val checked = checkedLists[it.list.listId] ?: false
-
-                        Checkbox(
-                            checked = checked,
-                            modifier = Modifier.align(alignment = Alignment.CenterVertically),
-                            onCheckedChange = { newChecked ->
-                                checkedLists = checkedLists.plus(Pair(it.list.listId, newChecked))
-                                if (itemToChangeLists != null) {
-                                    viewModel.toggleItemAssignedToList(
-                                        itemToChangeLists.item.itemId,
-                                        it.list.listId,
-                                        newChecked,
-                                    )
-                                }
-                            },
-                        )
-                        Text(
-                            text = it.list.name,
-                            modifier = Modifier.align(alignment = Alignment.CenterVertically),
-                        )
-                    }
-                },
-            )
         }
     }
 }

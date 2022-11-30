@@ -1,29 +1,37 @@
 package com.minimalisticapps.packingchecklist.list
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.minimalisticapps.packingchecklist.ClickToEditText
+import androidx.navigation.NavHostController
 import com.minimalisticapps.packingchecklist.ListWithItems
-import com.minimalisticapps.packingchecklist.MainViewModel
+import com.minimalisticapps.packingchecklist.Screen
 import com.minimalisticapps.packingchecklist.UiRow
-import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun ListRow(listWithItems: ListWithItems) {
-    val viewModel = getViewModel<MainViewModel>()
+fun ListRow(listWithItems: ListWithItems, navController: NavHostController) {
+    val openDetail = {
+        navController.navigate(Screen.EditList.route + "/${listWithItems.list.listId}")
+    }
 
     UiRow(
+        onClick = { openDetail() },
+        onLongClick = null,
         content = {
-            ClickToEditText(
-                modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
-                text = listWithItems.list.name,
-                isEditable = viewModel.itemListIdToEdit.value == listWithItems.list.listId,
-                clicked = { viewModel.listRowClicked(listWithItems.list.listId) },
-                onChange = { viewModel.renameList(listWithItems.list, it) },
-                onEditDone = { viewModel.listRowDone() }
-            )
+            Row {
+                Box(modifier = Modifier) {
+                    Text(text = listWithItems.list.name)
+                }
+                Spacer(Modifier.weight(1f))
+                Box {
+                    Row {
+                        ListTag(itemList = listWithItems.list, short = true)
+                    }
+                }
+            }
         }
     )
 }

@@ -23,6 +23,7 @@ import com.minimalisticapps.packingchecklist.checklist.ChecklistsScreen
 import com.minimalisticapps.packingchecklist.checklist.EditChecklistScreen
 import com.minimalisticapps.packingchecklist.item.EditItemScreen
 import com.minimalisticapps.packingchecklist.item.ItemsScreen
+import com.minimalisticapps.packingchecklist.list.EditListScreen
 import com.minimalisticapps.packingchecklist.list.ListsScreen
 import com.minimalisticapps.packingchecklist.theme.AppTheme
 import com.minimalisticapps.packingchecklist.theme.PrimaryColor
@@ -86,7 +87,7 @@ class MainActivity : ComponentActivity() {
                                                 navController.navigate(Screen.EditItem.route + "/null")
                                             }
                                             Screen.Lists.route -> {
-                                                viewModel.addList()
+                                                navController.navigate(Screen.EditList.route + "/null")
                                             }
                                             Screen.Checklists.route -> {
                                                 navController.navigate(Screen.EditChecklist.route + "/null")
@@ -123,7 +124,21 @@ class MainActivity : ComponentActivity() {
                                             ItemsScreen(navController)
                                         }
                                         composable(route = Screen.Lists.route) {
-                                            ListsScreen()
+                                            ListsScreen(navController)
+                                        }
+                                        composable(route = Screen.EditList.route + "/{itemId}") { navBackStack ->
+                                            val rawItemId =
+                                                navBackStack.arguments?.getString("itemId")
+                                            if (rawItemId != null) {
+                                                EditListScreen(
+                                                    if (rawItemId != "null") UUID.fromString(
+                                                        rawItemId
+                                                    ) else null,
+                                                    navController
+                                                )
+                                            } else {
+                                                Log.e("MainActivity", "rawItemId is null")
+                                            }
                                         }
                                         composable(route = Screen.EditItem.route + "/{itemId}") { navBackStack ->
                                             val rawItemId =

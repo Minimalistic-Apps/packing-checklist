@@ -17,6 +17,10 @@ interface DatabaseDao {
     @Query("SELECT * FROM Item WHERE Item.itemId = :itemId")
     fun getItemWithList(itemId: String): Flow<ItemWithLists>
 
+    @Transaction
+    @Query("SELECT * FROM ItemList WHERE ItemList.listId = :itemId")
+    fun getList(itemId: String): Flow<ListWithItems>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertItem(item: Item)
 
